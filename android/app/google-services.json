@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "1048389015994",
+    "project_id": "darboda-flutter",
+    "storage_bucket": "darboda-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048389015994:android:a9b7c6e5fae87e7918a583",
+        "android_client_info": {
+          "package_name": "com.example.darboda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048389015994-hegc0fp8hi1pqrktacrtaecaulh61tl6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.darboda",
+            "certificate_hash": "e1460c144feca6f65bb40879a9aa851f7481a64d"
+          }
+        },
+        {
+          "client_id": "1048389015994-hcrk96k2ir6mfusglfq4fi60n7rrobs9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzgo2cyjncjSLKElT7OIC0lj9hDdj1Fj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048389015994-hcrk96k2ir6mfusglfq4fi60n7rrobs9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048389015994:android:c0349cfbcb62a97b18a583",
+        "android_client_info": {
+          "package_name": "com.example.darboda_rider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048389015994-hcrk96k2ir6mfusglfq4fi60n7rrobs9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzgo2cyjncjSLKElT7OIC0lj9hDdj1Fj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048389015994-hcrk96k2ir6mfusglfq4fi60n7rrobs9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
