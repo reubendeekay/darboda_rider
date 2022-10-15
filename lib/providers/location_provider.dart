@@ -125,6 +125,12 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Stream<LocationData> getLocationChanges() {
+    Location location = Location();
+
+    return location.onLocationChanged;
+  }
+
   List preferredUserLocations({Map<String, dynamic>? locations}) {
     final currentLocation = {
       'title': 'Current Location',

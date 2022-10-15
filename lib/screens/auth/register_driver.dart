@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:darboda_rider/loading_screen.dart';
 import 'package:darboda_rider/models/driver_model.dart';
 import 'package:darboda_rider/providers/auth_provider.dart';
@@ -117,6 +118,8 @@ class _RegisterDriverScreenState extends State<RegisterDriverScreen> {
                     vehicleModel: typeController.text,
                     vehicleNumber: plateNumberController.text,
                     email: emailController.text,
+                    currentLocation: const GeoPoint(0, 0),
+                    isOnline: true,
                   );
                   setState(() {
                     isLoading = true;

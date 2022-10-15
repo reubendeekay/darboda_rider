@@ -30,6 +30,25 @@ String calculateTime(LatLng locData, LatLng userLocation) {
   }
 }
 
+String calculateTimeFromSeconds(double seconds) {
+  final timeInHours = (seconds / 3600);
+  if (seconds < 60) {
+    return '${seconds.toStringAsFixed(0)} s';
+  }
+
+  if (timeInHours < 1) {
+    return '${(timeInHours * 60.0).toStringAsFixed(0)} mins';
+  } else if (timeInHours % 1 == 0) {
+    return '${(timeInHours).toStringAsFixed(0)} hrs';
+  } else {
+    final minRem = timeInHours % 1;
+    final hrs = timeInHours.floor();
+    final mins = (minRem * 60).floor();
+
+    return '$hrs hrs $mins mins';
+  }
+}
+
 LatLng calculateLatLng(GeoPoint locData) {
   return LatLng(locData.latitude, locData.longitude);
 }
@@ -74,4 +93,17 @@ LatLngBounds boundsFromLatLngList(List<LatLng> list) {
     }
   }
   return LatLngBounds(northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
+}
+
+String moneyFormat(String price) {
+  if (price.length > 2) {
+    var value = price.replaceAll('.00', '');
+    ;
+
+    value = value.replaceAll(RegExp(r'\D'), '');
+    value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');
+    return '$value.00';
+  }
+
+  return price;
 }

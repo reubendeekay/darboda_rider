@@ -8,23 +8,48 @@ void registerNotification() {
   firebaseMessaging.requestPermission();
 
   FirebaseMessaging.onBackgroundMessage(
-    (message) async => await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-          id: 10,
-          channelKey: 'basic_channel',
-          title: message.notification!.title,
-          body: message.notification!.body),
-    ),
+    (message) async =>
+        message.notification!.title!.contains('New Message from Darboda')
+            ? await AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                    id: 2,
+                    channelKey: 'chat',
+                    title: message.notification!.title,
+                    category: NotificationCategory.Message,
+                    largeIcon: message.data['icon'],
+                    roundedLargeIcon: true,
+                    notificationLayout: NotificationLayout.Messaging,
+                    body: message.notification!.body),
+              )
+            : await AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                    id: 1,
+                    channelKey: 'basic_channel',
+                    title: message.notification!.title,
+                    body: message.notification!.body),
+              ),
   );
   FirebaseMessaging.onMessage.listen(
     (message) async {
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: 10,
-            channelKey: 'basic_channel',
-            title: message.notification!.title,
-            body: message.notification!.body),
-      );
+      message.notification!.title!.contains('New Message from Darboda')
+          ? await AwesomeNotifications().createNotification(
+              content: NotificationContent(
+                  id: 2,
+                  channelKey: 'chat',
+                  title: message.notification!.title,
+                  category: NotificationCategory.Message,
+                  largeIcon: message.data['icon'],
+                  roundedLargeIcon: true,
+                  notificationLayout: NotificationLayout.Messaging,
+                  body: message.notification!.body),
+            )
+          : await AwesomeNotifications().createNotification(
+              content: NotificationContent(
+                  id: 1,
+                  channelKey: 'basic_channel',
+                  title: message.notification!.title,
+                  body: message.notification!.body),
+            );
     },
   );
 

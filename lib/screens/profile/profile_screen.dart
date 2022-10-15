@@ -2,7 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:darboda_rider/constants.dart';
 import 'package:darboda_rider/providers/auth_provider.dart';
 import 'package:darboda_rider/screens/auth/edit_driver_screen.dart';
+import 'package:darboda_rider/screens/history/my_rides_screen.dart';
 import 'package:darboda_rider/screens/profile/widgets/bar_chat.dart';
+import 'package:darboda_rider/screens/profile/widgets/support_widget.dart';
+import 'package:darboda_rider/screens/trail/weekly_payment_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -141,7 +144,14 @@ Widget settingTile(Map<String, dynamic> data) {
       data['title'],
     ),
     onTap: () {
-      data['onTap']();
+      if (data['title'] == 'Support') {
+        Get.bottomSheet(const SupportWidget(),
+            isDismissible: true,
+            backgroundColor: Colors.white,
+            isScrollControlled: true);
+      } else {
+        data['onTap']();
+      }
     },
     trailing: const Icon(
       CupertinoIcons.chevron_right,
@@ -155,13 +165,15 @@ List<Map<String, dynamic>> settings = [
     'title': 'Payment',
     'icon': Iconsax.card,
     'onTap': () {
-      // Get.to(() => const PaymentBillingSettings());
+      Get.to(() => const WeeklyPaymentScreen());
     },
   },
   {
     'title': 'My Rides',
     'icon': Icons.motorcycle,
-    'onTap': () {},
+    'onTap': () {
+      Get.to(() => const MyRidesScreen());
+    },
   },
   {
     'title': 'Support',

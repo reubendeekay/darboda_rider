@@ -30,6 +30,17 @@ void main() async {
             channelName: 'Basic notifications',
             channelDescription: 'Notification channel for basic tests',
             defaultColor: kPrimaryColor,
+            playSound: true,
+            enableLights: true,
+            ledColor: Colors.white),
+        NotificationChannel(
+            channelKey: 'chat',
+            channelName: 'Chat notifications',
+            channelDescription: 'Notification channel for basic tests',
+            defaultColor: kPrimaryColor,
+            enableLights: true,
+            channelShowBadge: true,
+            playSound: true,
             ledColor: Colors.white)
       ]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -51,13 +62,30 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     registerNotification();
+
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         // Insert here your friendly dialog box before call the request method
         // This is very important to not harm the user experience
         AwesomeNotifications().requestPermissionToSendNotifications();
+
+        //Perform on click action over notification
       }
     });
+    //On click action over notification
+    AwesomeNotifications().setListeners(
+      onActionReceivedMethod: (actionReceived) async {
+        if (actionReceived.id! == 2) {
+          final payload =
+              actionReceived.payload!['data'] as Map<String, dynamic>;
+
+          Navigator.of(context).pushNamed(ChatRoom.routeName, arguments: {
+            'user': payload['user'],
+            'chatRoomId': payload['id'],
+          });
+        }
+      },
+    );
   }
 
   @override

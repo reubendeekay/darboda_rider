@@ -1,4 +1,5 @@
 import 'package:darboda_rider/constants.dart';
+import 'package:darboda_rider/helpers/distance_helper.dart';
 import 'package:darboda_rider/models/request_model.dart';
 import 'package:darboda_rider/screens/trail/payment_info_widget.dart';
 import 'package:darboda_rider/screens/trail/widgets/customer_widget.dart';
@@ -35,7 +36,7 @@ class PaymentScreen extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    'TZS ${request.amount}',
+                    'TZS ${moneyFormat(request.amount!)}',
                     style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.w900,

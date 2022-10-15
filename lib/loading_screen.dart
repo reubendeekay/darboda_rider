@@ -5,6 +5,7 @@ import 'package:darboda_rider/providers/location_provider.dart';
 import 'package:darboda_rider/screens/auth/register_driver.dart';
 import 'package:darboda_rider/screens/home/homepage.dart';
 import 'package:darboda_rider/screens/trail/trail_screen.dart';
+import 'package:darboda_rider/screens/trail/weekly_payment_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -30,14 +31,21 @@ class _InitialLoadingScreenState extends State<InitialLoadingScreen> {
       final user = Provider.of<AuthProvider>(context, listen: false).user;
 
       if (user!.isDriver) {
-        final driver = Provider.of<AuthProvider>(context, listen: false).rider!;
+        final userData =
+            Provider.of<AuthProvider>(context, listen: false).userData!;
 
-        if (driver.rideId!.isNotEmpty) {
-          Get.offAll(() => TrailScreen(
-                rideId: driver.rideId!,
-              ));
+        if (userData.isPending) {
+          Get.off(() => const WeeklyPaymentScreen(isDisabled: true));
         } else {
-          Get.offAll(() => const Homepage());
+          final driver =
+              Provider.of<AuthProvider>(context, listen: false).rider!;
+          if (driver.rideId!.isNotEmpty) {
+            Get.offAll(() => TrailScreen(
+                  rideId: driver.rideId!,
+                ));
+          } else {
+            Get.offAll(() => const Homepage());
+          }
         }
       } else {
         Get.off(() => const RegisterDriverScreen());

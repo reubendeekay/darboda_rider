@@ -46,7 +46,7 @@ class ChatProvider with ChangeNotifier {
                   chat.update({
                     'latestMessage':
                         message.message!.isNotEmpty ? message.message : 'photo',
-                    'sentAt': Timestamp.now(),
+                    'sentAt': FieldValue.serverTimestamp(),
                     'sentBy': uid,
                   }),
                   chat.collection('messages').doc().set({
@@ -57,7 +57,7 @@ class ChatProvider with ChangeNotifier {
                     'media': url,
                     'mediaType': message.mediaType,
                     'isRead': false,
-                    'sentAt': Timestamp.now()
+                    'sentAt': FieldValue.serverTimestamp()
                   })
                 }
               else
@@ -65,10 +65,10 @@ class ChatProvider with ChangeNotifier {
                   chat.set({
                     'initiator': uid,
                     'receiver': userId,
-                    'startedAt': Timestamp.now(),
+                    'startedAt': FieldValue.serverTimestamp(),
                     'latestMessage':
                         message.message!.isNotEmpty ? message.message : '',
-                    'sentAt': Timestamp.now(),
+                    'sentAt': FieldValue.serverTimestamp(),
                     'sentBy': uid,
                   }),
                   chat.collection('messages').doc().set({
@@ -79,7 +79,7 @@ class ChatProvider with ChangeNotifier {
                     'media': url,
                     'mediaType': message.mediaType,
                     'isRead': false,
-                    'sentAt': Timestamp.now()
+                    'sentAt': FieldValue.serverTimestamp()
                   })
                 }
             });
@@ -93,7 +93,7 @@ class ChatProvider with ChangeNotifier {
               {
                 chat.update({
                   'latestMessage': message.message ?? 'photo',
-                  'sentAt': Timestamp.now(),
+                  'sentAt': FieldValue.serverTimestamp(),
                   'sentBy': uid,
                 }),
                 chat.collection('messages').doc().set({
@@ -103,7 +103,7 @@ class ChatProvider with ChangeNotifier {
                   'media': url,
                   'mediaType': message.mediaType,
                   'isRead': false,
-                  'sentAt': Timestamp.now()
+                  'sentAt': FieldValue.serverTimestamp()
                 })
               }
             else
@@ -111,10 +111,10 @@ class ChatProvider with ChangeNotifier {
                 chat.set({
                   'initiator': uid,
                   'receiver': userId,
-                  'startedAt': Timestamp.now(),
+                  'startedAt': FieldValue.serverTimestamp(),
                   'latestMessage':
                       message.message!.isNotEmpty ? message.message : '',
-                  'sentAt': Timestamp.now(),
+                  'sentAt': FieldValue.serverTimestamp(),
                   'sentBy': uid,
                 }),
                 chat.collection('messages').doc().set({
@@ -124,7 +124,7 @@ class ChatProvider with ChangeNotifier {
                   'media': url,
                   'mediaType': message.mediaType,
                   'isRead': false,
-                  'sentAt': Timestamp.now()
+                  'sentAt': FieldValue.serverTimestamp()
                 })
               }
           });

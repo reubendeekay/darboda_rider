@@ -9,7 +9,7 @@ class RiderModel {
   final String? vehicleNumber;
   final String? rideId;
   final String? email;
-  final GeoPoint? currentLocation;
+  GeoPoint? currentLocation;
   bool isOnline;
   final String? vehicleModel;
   final String? vehicleColor;
@@ -46,6 +46,7 @@ class RiderModel {
       'documents': documents,
       'rideId': rideId,
       'currentLocation': currentLocation,
+      'isBusy': false,
     };
   }
 

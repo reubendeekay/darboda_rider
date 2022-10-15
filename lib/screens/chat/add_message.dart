@@ -75,6 +75,9 @@ class _AddMessageState extends State<AddMessage> {
                 color: Colors.white,
               ),
               onPressed: () {
+                if (messageController.text.isEmpty) {
+                  return;
+                }
                 Provider.of<ChatProvider>(context, listen: false).sendMessage(
                     widget.userId,
                     MessageModel(

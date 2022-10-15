@@ -155,10 +155,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                       isLoading: isLoading,
                       onTap: () async {
                         controller.autoRetrievalTimeLeft.inSeconds < 1
-                            ? Get.off(() => PhoneVerificationScreen(
-                                  user: widget.user,
-                                  isSignUp: widget.isSignUp,
-                                ))
+                            ? controller.sendOTP()
                             : ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Please wait'),

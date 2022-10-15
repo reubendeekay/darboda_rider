@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:darboda_rider/constants.dart';
+import 'package:darboda_rider/providers/auth_provider.dart';
 import 'package:darboda_rider/providers/location_provider.dart';
 import 'package:darboda_rider/providers/request_provider.dart';
 import 'package:darboda_rider/screens/trail/widgets/cancelled_ride.dart';
@@ -9,7 +10,9 @@ import 'package:darboda_rider/screens/trail/widgets/customer_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mapbox/flutter_mapbox.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:location/location.dart';
 
 import 'package:provider/provider.dart';
 
@@ -99,7 +102,7 @@ class _TrailScreenState extends State<TrailScreen> {
         _wayPoints = wayPoints;
       });
       await _controller!.buildRoute(wayPoints: wayPoints, options: options);
-      _controller!.startNavigation(
+      await _controller!.startNavigation(
         options: options,
       );
 
@@ -144,6 +147,7 @@ class _TrailScreenState extends State<TrailScreen> {
             onCreated: (MapBoxNavigationViewController controller) async {
               _controller = controller;
               _controller!.initialize();
+              _controller!.reCenterCamera();
             }),
         StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             stream: FirebaseFirestore.instance
@@ -154,6 +158,10 @@ class _TrailScreenState extends State<TrailScreen> {
               if (snapshot.hasData && snapshot.data!['status'] == 'cancelled') {
                 return const CancelledRide();
               }
+              if (snapshot.hasData && snapshot.data!['status'] == 'pending') {
+                return const BackHome();
+              }
+
               return AnimatedPositioned(
                 bottom: snapshot.hasData ? 0 : -400,
                 duration: const Duration(milliseconds: 600),
@@ -162,6 +170,11 @@ class _TrailScreenState extends State<TrailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    if (snapshot.data!['status'] == 'accepted' ||
+                        snapshot.data!['status'] == 'arrived')
+                      TrailLocationUpdater(
+                        rideId: widget.rideId,
+                      ),
                     Container(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 15),
@@ -182,6 +195,7 @@ class _TrailScreenState extends State<TrailScreen> {
                     ),
                     CustomerWidget(
                       data: snapshot.data,
+                      controller: _controller,
                     ),
                   ],
                 ),
@@ -238,5 +252,60 @@ class _TrailScreenState extends State<TrailScreen> {
         break;
     }
     setState(() {});
+  }
+}
+
+class TrailLocationUpdater extends StatelessWidget {
+  const TrailLocationUpdater({Key? key, required this.rideId})
+      : super(key: key);
+  final String rideId;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<LocationData>(
+        stream: Provider.of<LocationProvider>(context).getLocationChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final loc =
+                LatLng(snapshot.data!.latitude!, snapshot.data!.longitude!);
+            return TrailLocationUpdaterWidget(
+              location: loc,
+              rideId: rideId,
+            );
+          }
+          return Container();
+        });
+  }
+}
+
+class TrailLocationUpdaterWidget extends StatefulWidget {
+  const TrailLocationUpdaterWidget(
+      {Key? key, required this.location, required this.rideId})
+      : super(key: key);
+  final LatLng location;
+  final String rideId;
+
+  @override
+  State<TrailLocationUpdaterWidget> createState() =>
+      _TrailLocationUpdaterWidgetState();
+}
+
+class _TrailLocationUpdaterWidgetState
+    extends State<TrailLocationUpdaterWidget> {
+  @override
+  Widget build(BuildContext context) {
+    final rider = Provider.of<AuthProvider>(context, listen: false).rider;
+    rider!.currentLocation =
+        GeoPoint(widget.location.latitude, widget.location.longitude);
+    return FutureBuilder(
+        future: FirebaseFirestore.instance
+            .collection('rides')
+            .doc(widget.rideId)
+            .update({
+          'rider': rider,
+        }),
+        builder: (context, snapshot) {
+          return Container();
+        });
   }
 }

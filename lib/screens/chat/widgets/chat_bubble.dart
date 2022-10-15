@@ -63,8 +63,10 @@ class ChatBubble extends StatelessWidget {
                           bottom: 0,
                           right: 0,
                           child: Text(
-                              DateFormat('HH:mm')
-                                  .format(message.sentAt!.toDate()),
+                              message.sentAt == null
+                                  ? ''
+                                  : DateFormat('HH:mm')
+                                      .format(message.sentAt!.toDate()),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
@@ -99,7 +101,10 @@ class ChatBubble extends StatelessWidget {
                       bottom: 5,
                       right: 8,
                       child: Text(
-                          DateFormat('HH:mm').format(message.sentAt!.toDate()),
+                          message.sentAt == null
+                              ? ''
+                              : DateFormat('HH:mm')
+                                  .format(message.sentAt!.toDate()),
                           style: TextStyle(
                             color: Colors.white,
                             shadows: [

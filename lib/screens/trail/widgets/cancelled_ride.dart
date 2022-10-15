@@ -1,4 +1,5 @@
 import 'package:darboda_rider/loading_screen.dart';
+import 'package:darboda_rider/screens/home/homepage.dart';
 import 'package:darboda_rider/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -79,5 +80,28 @@ class CancelledRideWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class BackHome extends StatefulWidget {
+  const BackHome({super.key});
+
+  @override
+  State<BackHome> createState() => _BackHomeState();
+}
+
+class _BackHomeState extends State<BackHome> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      Get.offAll(() => const Homepage());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

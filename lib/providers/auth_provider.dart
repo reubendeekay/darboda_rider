@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:darboda_rider/models/driver_model.dart';
+import 'package:darboda_rider/models/user_data_model.dart';
 import 'package:darboda_rider/models/user_model.dart';
+import 'package:darboda_rider/models/user_presence.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +12,8 @@ class AuthProvider with ChangeNotifier {
   RiderModel? _rider;
   UserModel? get user => _user;
   RiderModel? get rider => _rider;
+  UserDataModel? _userData;
+  UserDataModel? get userData => _userData;
   Future<void> signUp(UserModel userModel) async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
     userModel.userId = uid;
@@ -29,8 +33,13 @@ class AuthProvider with ChangeNotifier {
       _user = UserModel.fromJson(value);
       if (_user!.isDriver) {
         await getRider();
+        if (_user!.isDriver) {
+          await getUserData();
+        }
       }
+      UserPresence.rtdbAndLocalFsPresence();
     });
+
     await FirebaseMessaging.instance.getToken().then((token) {
       FirebaseFirestore.instance
           .collection('users')
@@ -47,6 +56,19 @@ class AuthProvider with ChangeNotifier {
         .get()
         .then((value) {
       _rider = RiderModel.fromJson(value);
+    });
+    notifyListeners();
+  }
+
+  Future<void> getUserData() async {
+    await FirebaseFirestore.instance
+        .collection('userData')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('payment')
+        .doc('billing')
+        .get()
+        .then((value) {
+      _userData = UserDataModel.fromJson(value);
     });
     notifyListeners();
   }

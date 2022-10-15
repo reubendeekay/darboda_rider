@@ -113,7 +113,7 @@ class ChatRoom extends StatelessWidget {
                     .collection('chats')
                     .doc(chatRoomId)
                     .collection('messages')
-                    .orderBy('sentAt')
+                    .orderBy('sentAt', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
@@ -122,7 +122,7 @@ class ChatRoom extends StatelessWidget {
 
                   return Expanded(
                     child: ListView.builder(
-                      // reverse: true,
+                      reverse: true,
                       controller: _scrollController,
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {

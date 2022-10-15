@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:darboda_rider/helpers/distance_helper.dart';
 import 'package:darboda_rider/loading_screen.dart';
 import 'package:darboda_rider/models/request_model.dart';
 import 'package:darboda_rider/providers/request_provider.dart';
@@ -7,14 +8,16 @@ import 'package:darboda_rider/screens/trail/payment_screen.dart';
 import 'package:darboda_rider/screens/trail/trail_screen.dart';
 import 'package:darboda_rider/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mapbox/flutter_mapbox.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 class CustomerWidget extends StatelessWidget {
-  const CustomerWidget({super.key, this.data});
+  const CustomerWidget({super.key, this.data, this.controller});
   final DocumentSnapshot<Map<String, dynamic>>? data;
+  final MapBoxNavigationViewController? controller;
   Map<String, dynamic> getButton(BuildContext context) {
     final status = data!.data()!['status'];
     if (status == 'accepted') {
@@ -51,8 +54,10 @@ class CustomerWidget extends StatelessWidget {
       return {
         'text': 'Ask for Payment',
         'onPressed': () {
-          Get.off(() =>
-              PaymentScreen(request: RequestModel.fromJson(data!.data()!)));
+          controller!.finishNavigation().then((_) {
+            Get.off(() =>
+                PaymentScreen(request: RequestModel.fromJson(data!.data()!)));
+          });
         }
       };
     }
@@ -127,11 +132,20 @@ class CustomerWidget extends StatelessWidget {
                                   fontSize: 14,
                                 ),
                               ),
-                              const Text(
-                                'Arriving in 3 min',
-                                style:
-                                    TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
+                              FutureBuilder(
+                                  future: controller!.durationRemaining,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                            ConnectionState.waiting ||
+                                        !snapshot.hasData) {
+                                      return const Text('Loading...');
+                                    }
+                                    return Text(
+                                      'Arriving in ${calculateTimeFromSeconds(snapshot.data!)}',
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.grey),
+                                    );
+                                  }),
                             ],
                           ),
                         ),
@@ -256,6 +270,8 @@ class CustomerWidget extends StatelessWidget {
             ),
             InkWell(
               onTap: () async {
+                Navigator.of(context).pop();
+
                 await Provider.of<RequestProvider>(context, listen: false)
                     .cancelRide(request);
               },

@@ -27,10 +27,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     _controller.initialize().then((_) => setState(() {}));
     _controller.setVolume(0);
     _controller.play();
-
-    Future.delayed(const Duration(seconds: 8), () {
-      // Get.offAll(() => const AuthScreen());
-    });
   }
 
   @override
